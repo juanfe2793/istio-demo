@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feli-app-v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: feli-app-v1
+  template:
+    metadata:
+      labels:
+        app: feli-app-v1
+    spec:
+      containers:
+      - name: hello
+        image: gcr.io/google-samples/hello-app:1.0
+        imagePullPolicy: IfNotPresent        
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "200m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: feli-app-v1-svc
+spec:
+  selector:
+    app: feli-app-v1
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
